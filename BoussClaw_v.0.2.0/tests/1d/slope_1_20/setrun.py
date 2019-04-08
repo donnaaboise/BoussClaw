@@ -6,6 +6,7 @@ that will be read in by the Fortran code.
 
 """
 
+from __future__ import absolute_import
 import os
 import numpy as np
 
@@ -39,7 +40,7 @@ def setrun(claw_pkg='geoclaw'):
 
     assert claw_pkg.lower() == 'geoclaw',  "Expected claw_pkg = 'geoclaw'"
 
-    num_dim = 2
+    num_dim = 1
     rundata = data.ClawRunData(claw_pkg, num_dim)
 
     #------------------------------------------------------------------
@@ -81,18 +82,13 @@ def setrun(claw_pkg='geoclaw'):
 
     # Number of grid cells: Coarsest grid
     clawdata.num_cells[0] = 60*20 # dx = 60 / mx
-    clawdata.num_cells[1] = 4
     
-    clawdata.lower[1] =-1
-    clawdata.upper[1] = 1
-
-
     # ---------------
     # Size of system:
     # ---------------
 
     # Number of equations in the system:
-    clawdata.num_eqn = 3
+    clawdata.num_eqn = 2
 
     # Number of auxiliary variables in the aux array (initialized in setaux)
     clawdata.num_aux = 3
@@ -125,7 +121,7 @@ def setrun(claw_pkg='geoclaw'):
     # Note that the time integration stops after the final output time.
     # The solution at initial time t0 is always written in addition.
 
-    clawdata.output_style = 2
+    clawdata.output_style = 1
 
     if clawdata.output_style==1:
         # Output nout frames at equally spaced times up to tfinal:
@@ -198,14 +194,8 @@ def setrun(claw_pkg='geoclaw'):
     # Use dimensional splitting? (not yet available for AMR)
     clawdata.dimensional_split = 'unsplit'
     
-    # For unsplit method, transverse_waves can be 
-    #  0 or 'none'      ==> donor cell (only normal solver used)
-    #  1 or 'increment' ==> corner transport of waves
-    #  2 or 'all'       ==> corner transport of 2nd order corrections too
-    clawdata.transverse_waves = 2
-
     # Number of waves in the Riemann solution:
-    clawdata.num_waves = 3
+    clawdata.num_waves = 2
     
     # List of limiters to use for each wave family:  
     # Required:  len(limiter) == num_waves
@@ -215,7 +205,7 @@ def setrun(claw_pkg='geoclaw'):
     #   2 or 'superbee' ==> superbee
     #   3 or 'mc'       ==> MC limiter
     #   4 or 'vanleer'  ==> van Leer
-    clawdata.limiter = [3,3,3]
+    clawdata.limiter = [3,3]
 
     clawdata.use_fwaves = True    # True ==> use f-wave version of algorithms
     
@@ -241,9 +231,6 @@ def setrun(claw_pkg='geoclaw'):
 
     clawdata.bc_lower[0] = 3
     clawdata.bc_upper[0] = 1
-
-    clawdata.bc_lower[1] = 3
-    clawdata.bc_upper[1] = 3
 
     # Specify when checkpoint files should be created that can be
     # used to restart a computation.
@@ -325,10 +312,10 @@ def setrun(claw_pkg='geoclaw'):
     # More AMR parameters can be set -- see the defaults in pyclaw/data.py
 
     # == setregions.data values ==
-    regions = rundata.regiondata.regions
+    # regions = rundata.regiondata.regions
     # to specify regions of refinement append lines of the form
     #  [minlevel,maxlevel,t1,t2,x1,x2,y1,y2]
-    regions.append([1, 5, 0., 1e10, -100., 100., -100., 100.])
+    # regions.append([1, 5, 0., 1e10, -100., 100., -100., 100.])
 
     # == setgauges.data values ==
     # for gauges append lines of the form  [gaugeno, x, y, t1, t2]
@@ -357,7 +344,7 @@ def setgeo(rundata):
     try:
         geo_data = rundata.geo_data
     except:
-        print "*** Error, this rundata has no geo_data attribute"
+        print("*** Error, this rundata has no geo_data attribute")
         raise AttributeError("Missing geo_data attribute")
 
        
@@ -414,14 +401,14 @@ def setgeo(rundata):
 if __name__ == '__main__':
 
     if os.path.exists('fgmax_grid.txt'):
-        print "File fgmax_grid.txt exists, not regenerating"
+        print("File fgmax_grid.txt exists, not regenerating")
     else:
         try:    
             fname = 'make_fgmax_grid.py'
             execfile(fname)
-            print "Created fixed grid data by running ",fname
+            print("Created fixed grid data by running ",fname)
         except:
-            print "Did not find fixed grid specification ", fname
+            print("Did not find fixed grid specification ", fname)
 
 
     # Set up run-time parameters and write all data files.

@@ -8,7 +8,7 @@ module amr_module
     ! :::::   data structure info.
     ! ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     integer, parameter :: rsize = 5
-    integer, parameter :: nsize = 17
+    integer, parameter :: nsize = 19
 
     !  :::::::   integer part of node descriptor
     integer, parameter :: levelptr  = 1
@@ -44,20 +44,31 @@ module amr_module
     ! :::::::  for flagging points   
     real(kind=8), parameter :: goodpt = 0.0
     real(kind=8), parameter :: badpt  = 2.0
+    !!real(kind=8), parameter :: badpro = 3.0
+
+    ! :::::::  for flagging points   
+    ! TODO: can use one bit for this instead of real?
+    ! needs to be set
+    real(kind=8), parameter :: UNSET = -1.0
+    ! needs no refine
+    real(kind=8), parameter :: DONTFLAG = 0.0
+    ! needs refine
+    real(kind=8), parameter :: DOFLAG  = 2.0
     real(kind=8), parameter :: badpro = 3.0
+
 
     real(kind=8), parameter :: NEEDS_TO_BE_SET = 10.e33
     real(kind=8), parameter :: rinfinity = 10.e32
     integer, parameter :: iinfinity = 999999999
     integer, parameter :: horizontal = 1
     integer, parameter :: vertical = 2
-    integer, parameter :: maxgr = 15000
+    !!integer, parameter :: maxgr = 15000
     integer, parameter :: maxlv = 10
     integer, parameter :: maxcl = 7500
 
     ! The max1d parameter should be changed if using OpenMP grid based 
     ! looping, usually set to max1d = 60
-    integer, parameter :: max1d = 7500 
+    integer, parameter :: max1d = 65536 
     !integer, parameter :: max1d = 100 
     !integer, parameter :: max1d = 80 
     !integer, parameter :: max1d = 500 
@@ -66,12 +77,24 @@ module amr_module
     integer, parameter :: maxaux = 20
     integer, parameter :: maxwave = 10
 
-    real(kind=8) hxposs(maxlv), hyposs(maxlv),possk(maxlv),rnode(rsize, maxgr) 
+    ! note use of sentinel in listStart
+    !integer :: listOfGrids(maxgr),listStart(0:maxlv+1)
+    integer :: listStart(0:maxlv+1)
+    !integer,parameter :: bndListSize = 8*maxgr ! old way
+    !integer :: bndList(bndListSize,2)  ! guess size, average # nbors 4? manage as linked list
+    integer :: bndListSize
+    integer,allocatable, dimension(:,:) :: bndList  ! new way is allocatable     
 
+    ! start of dynamic allocation for maxgr and associated arrays
+    integer   maxgr 
+    real(kind=8), allocatable, dimension(:,:) :: rnode    ! new way, use allocatable, not pointer
+    integer, allocatable, dimension(:,:) :: node
+    integer, allocatable, dimension(:) :: listOfGrids
 
+    real(kind=8) hxposs(maxlv), hyposs(maxlv),possk(maxlv)
 
     real(kind=8) tol, tolsp
-    integer ibuff,  mstart, ndfree, lfine, node(nsize, maxgr), &
+    integer ibuff,  mstart, ndfree, ndfree_bnd, lfine,  &
             icheck(maxlv),lstart(maxlv),newstl(maxlv), &
             listsp(maxlv),intratx(maxlv),intraty(maxlv), &
             kratio(maxlv), iregsz(maxlv),jregsz(maxlv), &
@@ -79,6 +102,17 @@ module amr_module
             iregend(maxlv),jregend(maxlv), &
             numgrids(maxlv),numcells(maxlv), &
             iorder,mxnest,kcheck
+
+
+
+!!    integer ibuff,  mstart, ndfree, lfine, &
+!!            icheck(maxlv),lstart(maxlv),newstl(maxlv), &
+!!            listsp(maxlv),intratx(maxlv),intraty(maxlv), &
+!!            kratio(maxlv), iregsz(maxlv),jregsz(maxlv), &
+!!            iregst(maxlv),jregst(maxlv), &
+!!            iregend(maxlv),jregend(maxlv), &
+!!            numgrids(maxlv),numcells(maxlv), &
+!!            iorder,mxnest,kcheck
 
     ! ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     ! ::::  for alloc array/memory
@@ -107,6 +141,7 @@ module amr_module
     real(kind=8) :: xupper, yupper, xlower, ylower
     integer :: nghost, mthbc(4)
 
+
     ! ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     ! :::::  collect stats
     ! ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -114,10 +149,10 @@ module amr_module
     integer ::  iregridcount(maxlv), tvoll(maxlv)
     integer :: timeRegridding, timeUpdating, timeValout
     integer :: timeFlglvl,timeGrdfit2,timeGrdfit3,timeGrdfitAll
-    integer :: timeSetaux,timeFilval,timeBound,timeStepgrid,timeFilvalTot
-    integer :: timeFlagger, timeBufnst
-    real(kind=8) tvollCPU(maxlv)
-    real(kind=8) timeBoundCPU,timeStepgridCPU,timeSetauxCPU,timeRegriddingCPU
+    integer :: timeBound,timeStepgrid
+    integer :: timeFlagger, timeBufnst,timeTick, tick_clock_start
+    real(kind=8) tvollCPU(maxlv), timeTickCPU
+    real(kind=8) timeBoundCPU,timeStepgridCPU,timeRegriddingCPU
     real(kind=8) timeValoutCPU
 
     integer lentot,lenmax,lendim

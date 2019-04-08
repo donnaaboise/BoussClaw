@@ -6,7 +6,7 @@ function setplot is called to set the plot parameters.
 try:
     from setplotfg import setplotfg
 except:
-    print "Did not find setplotfg.py"
+    print("Did not find setplotfg.py")
     setplotfg = None
     
 import os
@@ -67,8 +67,8 @@ def setplot(plotdata):
         topo = eta - h
         surface = ma.masked_where(h<=drytol, eta)
         depth = ma.masked_where(h<=drytol, h)
-	surface_or_depth =  where(topo<0, surface, depth)
-	return surface_or_depth
+        surface_or_depth =  where(topo<0, surface, depth)
+        return surface_or_depth
 
     def aa(current_data):
         from numpy import where,sqrt
@@ -84,7 +84,7 @@ def setplot(plotdata):
         t_energy=sum(dx*energy)
         fout=open(infile,'a')
         fout.write("%20.10e %20.10e \n" % (t, t_energy[0]))
-	return
+        return
 
     def aa_bous(current_data):
         import pylab
@@ -125,7 +125,7 @@ def setplot(plotdata):
         pylab.title('Surface at t = %4.2f' % t, fontsize=20)
         pylab.xticks(fontsize=15)
         pylab.yticks(fontsize=15)
-	return
+        return
 	
     #plotitem.plot_var = surface_or_depth
     plotitem.plot_var = geoplot.surface_or_depth
@@ -218,7 +218,7 @@ def setplot(plotdata):
         pylab.title('Surface at t = %4.2f' % t, fontsize=20)
         pylab.xticks(fontsize=15)
         pylab.yticks(fontsize=15)
-    plotaxes.afteraxes = fixup
+        plotaxes.afteraxes = fixup
 
     #-----------------------------------------
     # Figure for Cross section plot
@@ -274,6 +274,7 @@ def setplot(plotdata):
         pylab.title('Surface at t = %4.2f' % t, fontsize=20)
         pylab.xticks(fontsize=15)
         pylab.yticks(fontsize=15)
+
     plotaxes.afteraxes = fixup
 
     #-----------------------------------------

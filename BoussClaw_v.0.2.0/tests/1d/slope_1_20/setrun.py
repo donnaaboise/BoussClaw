@@ -125,7 +125,7 @@ def setrun(claw_pkg='geoclaw'):
     # Note that the time integration stops after the final output time.
     # The solution at initial time t0 is always written in addition.
 
-    clawdata.output_style = 2
+    clawdata.output_style = 1
 
     if clawdata.output_style==1:
         # Output nout frames at equally spaced times up to tfinal:
@@ -357,7 +357,7 @@ def setgeo(rundata):
     try:
         geo_data = rundata.geo_data
     except:
-        print "*** Error, this rundata has no geo_data attribute"
+        print("*** Error, this rundata has no geo_data attribute")
         raise AttributeError("Missing geo_data attribute")
 
        
@@ -414,14 +414,14 @@ def setgeo(rundata):
 if __name__ == '__main__':
 
     if os.path.exists('fgmax_grid.txt'):
-        print "File fgmax_grid.txt exists, not regenerating"
+        print("File fgmax_grid.txt exists, not regenerating")
     else:
         try:    
             fname = 'make_fgmax_grid.py'
             execfile(fname)
-            print "Created fixed grid data by running ",fname
+            print("Created fixed grid data by running ",fname)
         except:
-            print "Did not find fixed grid specification ", fname
+            print("Did not find fixed grid specification ", fname)
 
 
     # Set up run-time parameters and write all data files.

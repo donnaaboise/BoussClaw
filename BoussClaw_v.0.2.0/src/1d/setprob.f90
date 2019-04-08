@@ -16,9 +16,12 @@ subroutine setprob()
     integer :: iunit
     character(len=25) fname
 
+
     call set_geo()                    !# sets basic parameters g and coord system
     call set_refinement()             !# sets refinement control parameters
+    write(6,*) 'Reading in setprob ...'
     call read_dtopo_settings()        !# specifies file with dtopo from earthquake
+    write(6,*) 'done'
     call read_topo_settings()         !# specifies topography (bathymetry) files
     call set_qinit()                  !# specifies file with dh if this used instead
     call set_fixed_grids()            !# Fixed grid settings
@@ -37,5 +40,10 @@ subroutine setprob()
     read(7,*) use_bous_sw_thresh 
     read(7,*) bous_sw_thresh 
     read(7,*) sw_depth
+    close(7)
+
+    !!open(147,file='dtopo.data')
+    !!close(100)
+
 
 end subroutine setprob

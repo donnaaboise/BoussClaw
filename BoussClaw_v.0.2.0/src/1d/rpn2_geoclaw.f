@@ -33,7 +33,7 @@ c
 !           David George, Vancouver WA, Feb. 2009                           !
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-      use geoclaw_module, only: g => grav, drytol => dry_tolerance
+      use geoclaw_module, only: g => grav, drytol => dry_tolerance, rho
       use geoclaw_module, only: earth_radius, deg2rad
       use amr_module, only: mcapa
 
@@ -59,11 +59,16 @@ c
 
       double precision hR,hL,huR,huL,uR,uL,hvR,hvL,vR,vL,phiR,phiL
       double precision bR,bL,sL,sR,sRoe1,sRoe2,sE1,sE2,uhat,chat
-      double precision s1m,s2m
+      double precision s1m,s2m, pL, pR
       double precision hstar,hstartest,hstarHLL,sLtest,sRtest
       double precision tw,dxdc
 
       logical rare1,rare2
+
+      !! Pressure forcing
+      pL = 0      
+      pR = 0
+
 
       !loop through Riemann problems at each grid cell
       do i=2-mbc,mx+mbc
@@ -205,9 +210,16 @@ c               bL=hstartest+bR
 
          maxiter = 1
 
+
+!!      # New call to JCP solver 
+!!      subroutine riemann_aug_JCP(maxiter,meqn,mwaves,hL,hR,huL,huR,
+!!     &   hvL,hvR,bL,bR,uL,uR,vL,vR,phiL,phiR,pL,pR,sE1,sE2,drytol,g,rho,
+!!     &   sw,fw)
+
+
          call riemann_aug_JCP(maxiter,3,3,hL,hR,huL,
-     &        huR,hvL,hvR,bL,bR,uL,uR,vL,vR,phiL,phiR,sE1,sE2,
-     &                                    drytol,g,sw,fw)
+     &        huR,hvL,hvR,bL,bR,uL,uR,vL,vR,phiL,phiR,pL, pR, sE1,sE2,
+     &                                    drytol,g,rho,sw,fw)
 
 c         call riemann_ssqfwave(maxiter,meqn,mwaves,hL,hR,huL,huR,
 c     &     hvL,hvR,bL,bR,uL,uR,vL,vR,phiL,phiR,sE1,sE2,drytol,g,sw,fw)

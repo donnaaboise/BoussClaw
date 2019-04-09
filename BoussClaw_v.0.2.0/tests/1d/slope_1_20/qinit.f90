@@ -28,25 +28,27 @@ subroutine qinit(meqn,mbc,mx,my,xlower,ylower,dx,dy,q,maux,aux)
     c = dsqrt(g*(a0+a1))
     x1 = x1 + 6.d0/sqrt(g)*c
 
-    do j=1-mbc,my+mbc
-        do i=1-mbc,mx+mbc
+    do j = 1-mbc,my+mbc
+        do i = 1-mbc,mx+mbc
             q(1,i,j) = max(0.d0, sea_level - aux(1,i,j))
         enddo
     enddo
 
-    do j=1-mbc,my+mbc
-        y=ylower + (j-0.5d0)*dy
-        do i=1-mbc,mx+mbc
-            x=xlower+ (i-0.5d0)*dx
-            rx= k*(x-x1)
-            eta= a1*(1.d0/cosh(rx))**2.d0
-            if (eta<1d-4) eta=0.d0
+    do j = 1-mbc,my+mbc
+        y = ylower + (j-0.5d0)*dy
+        do i = 1-mbc,mx+mbc
+            x = xlower+ (i-0.5d0)*dx
+            rx = k*(x-x1)
+            eta = a1*(1.d0/cosh(rx))**2.d0
+            if (eta < 1d-4) then
+                eta = 0.d0
+            endif
 
             q(1,i,j) = q(1,i,j) + eta
-            if (eta>0.d0) then
+            if (eta > 0.d0) then
                q(2,i,j) = -q(1,i,j)*c*(1.d0-a0/q(1,i,j))
             endif
-            q(3,i,j)=0.d0
+            q(3,i,j) = 0.d0
 
         enddo
     enddo

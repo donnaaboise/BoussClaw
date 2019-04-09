@@ -54,7 +54,7 @@ subroutine b4step2(mbc,mx,my,meqn,q,xlower,ylower,dx,dy,t,dt,maux,aux)
 
     do i=1,mx
         xp = xlower + (i-0.5d0)*dx
-        if (q(1,i,1)>dry_tolerance.and.aux(1,i,j)>=0.d0) then
+        if (q(1,i,1) > dry_tolerance .and. aux(1,i,1)>=0.d0) then
             runup = min(runup,xp)
         endif
     enddo

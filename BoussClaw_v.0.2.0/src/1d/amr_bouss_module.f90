@@ -1,4 +1,4 @@
-module amr_module
+module amr_bouss_module
 
     implicit none
        
@@ -28,6 +28,12 @@ module amr_module
     integer, parameter :: numflags  = 15
     integer, parameter :: domflags_base  = 16
     integer, parameter :: domflags2  = 17
+    !> pointer (actually it's an index in the bndList array) to the first node 
+    !! of a linked list, which stores all grids (on the same level) that border this grid
+    integer, parameter :: bndListSt  = 18
+
+    !> number of grids (on the same level) that border this grid
+    integer, parameter :: bndListNum = 19
 
     ! :::::::  real part of node descriptor
     integer, parameter :: cornxlo  = 1
@@ -41,10 +47,7 @@ module amr_module
     integer, parameter :: null = 0
     integer, parameter :: nil  = 0
 
-    ! :::::::  for flagging points   
-    real(kind=8), parameter :: goodpt = 0.0
-    real(kind=8), parameter :: badpt  = 2.0
-    !!real(kind=8), parameter :: badpro = 3.0
+    integer, parameter :: gridNbor = 1 !use 1st col, 2nd col is nextfree - the link
 
     ! :::::::  for flagging points   
     ! TODO: can use one bit for this instead of real?
@@ -220,4 +223,4 @@ module amr_module
     character(len=200) :: rstfile
     logical :: check_a
 
-end module amr_module
+end module amr_bouss_module

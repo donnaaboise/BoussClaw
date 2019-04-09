@@ -38,4 +38,6 @@ subroutine setprob()
     read(7,*) bous_sw_thresh 
     read(7,*) sw_depth
 
+    close(7)
+
 end subroutine setprob

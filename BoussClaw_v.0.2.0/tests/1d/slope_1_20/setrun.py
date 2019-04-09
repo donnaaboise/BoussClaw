@@ -14,9 +14,9 @@ try:
 except:
     raise Exception("*** Must first set CLAW enviornment variable")
 
-bouss = False                 # Dispersive terms ?
+bouss = True                 # Dispersive terms ?
 B_param = 1.0 / 15.0          # Parameter for the Boussinesq eqns
-use_bous_sw_thresh = False    # Use the switching threshold
+use_bous_sw_thresh = True    # Use the switching threshold
 bous_sw_thresh = .8           # Threshold for the transition to SWE
 sw_depth = -0.1              # if bathymetry is larger than this, swe is used 
 
@@ -80,7 +80,7 @@ def setrun(claw_pkg='geoclaw'):
     clawdata.upper[0] =  45
 
     # Number of grid cells: Coarsest grid
-    clawdata.num_cells[0] = 60*20 # dx = 60 / mx
+    clawdata.num_cells[0] = 2**11    # dx = 1200
     clawdata.num_cells[1] = 4
     
     clawdata.lower[1] =-1
@@ -125,7 +125,7 @@ def setrun(claw_pkg='geoclaw'):
     # Note that the time integration stops after the final output time.
     # The solution at initial time t0 is always written in addition.
 
-    clawdata.output_style = 1
+    clawdata.output_style = 2
 
     if clawdata.output_style==1:
         # Output nout frames at equally spaced times up to tfinal:

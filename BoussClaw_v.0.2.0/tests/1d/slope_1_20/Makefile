@@ -25,7 +25,7 @@ PLOTDIR = _plots               # Directory for plots
 
 LAPACK_DIR = /Users/calhoun/software/LAPACK/local
 
-FFLAGS += -O0 -g -L${LAPACK_DIR}/lib -llapack -lblas
+FFLAGS += -O2 -L${LAPACK_DIR}/lib -llapack -lblas
 
 # ---------------------------------
 # package sources for this program:

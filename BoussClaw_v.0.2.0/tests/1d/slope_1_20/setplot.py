@@ -145,7 +145,7 @@ def setplot(plotdata):
     plotitem.add_colorbar = False
     plotitem.amr_celledges_show = [0,0,0]
     plotaxes.xlimits = 'auto'
-    plotaxes.ylimits = 'auto'
+    plotaxes.ylimits = [-1.1, 0.5]
 
     plotaxes.afteraxes = aa_bous
 
@@ -185,8 +185,8 @@ def setplot(plotdata):
     # Set up for axes in this figure:
     plotaxes = plotfigure.new_plotaxes('water surface')
     plotaxes.title = 'eta'
-    plotaxes.xlimits = [-10, 30]
-    plotaxes.ylimits = [-.1, .5]
+    plotaxes.xlimits = [-15, 45]
+    plotaxes.ylimits = [-1.1, 1]
     
     # Water Surface
     plotitem = plotaxes.new_plotitem(plot_type='1d_from_2d_data')

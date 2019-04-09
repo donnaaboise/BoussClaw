@@ -13,48 +13,49 @@ module bous_module
     
 contains
 
-      !----------------------
-      subroutine matvec_triad ( n, x, y, nelt, ia, ja, a, isym )                       !
-      !
-      !! MATVEC_TRIAD computes A*X for a matrix A stored in SLAP Triad form.
-      !
-      !  Licensing:
-      !
-      !    This code is distributed under the GNU LGPL license.
-      !
-      !  Modified:
-      !
-      !    21 July 2004
-      !
-      !  Author:
-      !
-      !    John Burkardt
-      !
-      !  Parameters:
-      !
-      !    Input, integer N, the number of elements in the vectors.
-      !
-      !    Input, real ( kind = 8 ) X(N), the vector to be multiplied by A.
-      !
-      !    Output, real ( kind = 8 ) Y(N), the product A * X.
-      !
-      !    Input, integer NELT, the number of nonzero entries in A.
-      !
-      !    Input, integer IA(NELT), JA(NELT), real ( kind = 8 ) A(NELT), the data
-      !    structure storing the sparse matrix.
-      !
-      !    Input, integer ISYM, is 0 if all nonzero entries of the matrix
-      !    are stored, and 1 if only the diagonal and upper or lower triangle
-      !    are stored.
-      !
-        implicit none
+    !!----------------------
+    subroutine matvec_triad ( n, x, y, nelt, ia, ja, a, isym )                       !
+    !!
+    !!! MATVEC_TRIAD computes A*X for a matrix A stored in SLAP Triad form.
+    !!
+    !!  Licensing:
+    !!
+    !!    This code is distributed under the GNU LGPL license.
+    !!
+    !!  Modified:
+    !!
+    !!    21 July 2004
+    !!
+    !!  Author:
+    !!
+    !!    John Burkardt
+    !!
+    !!  Parameters:
+    !!
+    !!    Input, integer N, the number of elements in the vectors.
+    !!
+    !!    Input, real ( kind = 8 ) X(N), the vector to be multiplied by A.
+    !!
+    !!    Output, real ( kind = 8 ) Y(N), the product A * X.
+    !!
+    !!    Input, integer NELT, the number of nonzero entries in A.
+    !!
+    !!    Input, integer IA(NELT), JA(NELT), real ( kind = 8 ) A(NELT), the data
+    !!    structure storing the sparse matrix.
+    !!
+    !!    Input, integer ISYM, is 0 if all nonzero entries of the matrix
+    !!    are stored, and 1 if only the diagonal and upper or lower triangle
+    !!    are stored.
+    !!
+    
+    implicit none
 
-        integer ( kind = 4 ) n
-        integer ( kind = 4 ) nelt
+    integer ( kind = 4 ) n
+    integer ( kind = 4 ) nelt
 
-        real ( kind = 8 ) a(nelt)
-        integer ( kind = 4 ) ia(nelt)
-        integer ( kind = 4 ) isym
+    real ( kind = 8 ) a(nelt)
+    integer ( kind = 4 ) ia(nelt)
+    integer ( kind = 4 ) isym
         integer ( kind = 4 ) ja(nelt)
         integer ( kind = 4 ) k
         real ( kind = 8 ) x(n)
